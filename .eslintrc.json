@@ -1,11 +1,11 @@
 {
-  "extends": ["next/core-web-vitals", "standard", "plugin:tailwindcss/recommended", "prettier"],
-  "settings": {
-    "tailwind/no-custom-classname" : {
-      "config" : "./tailwind.config.ts" 
-    },
-    "tailwind" : {
-      "config" : "tailwind.config.ts"
-    }
+  "extends": [
+    "next/core-web-vitals",
+    "standard",
+    "plugin:tailwindcss/recommended",
+    "prettier"
+  ],
+  "rules": {
+    "tailwindcss/no-custom-classname": ["off"]
   }
 }

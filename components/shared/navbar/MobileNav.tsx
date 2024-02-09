@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Sheet,
   SheetClose,
@@ -13,40 +11,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { SignedOut } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
-import { sideBarLinks } from "@/constants";
-import { usePathname } from "next/navigation";
-
-function NavContent() {
-  const pathname = usePathname();
-  return (
-    <section className="flex h-full flex-col gap-6 pt-16">
-      {sideBarLinks.map((item, index) => {
-        const isActive =
-          (pathname.includes(item.route) && item.route.length > 1) ||
-          pathname === item.route;
-        return (
-          <SheetClose asChild key={index}>
-            <Link
-              href={item.route}
-              className={`${isActive ? " primary-gradient text-light-900 rounded-lg " : "text-dark300_light900"} flex items-center justify-start gap-4 bg-transparent p-4`}
-            >
-              <Image
-                src={item.imgURL}
-                alt={item.label}
-                width={20}
-                height={20}
-                className={`${isActive ? "" : " invert-colors"}`}
-              />
-              <p className={`${isActive ? "base-bold" : "base-medium"}`}>
-                {item.label}
-              </p>
-            </Link>
-          </SheetClose>
-        );
-      })}
-    </section>
-  );
-}
+import NavContent from "../navContent/NavContent";
 
 export default function MobileNavBar() {
   return (
@@ -72,7 +37,7 @@ export default function MobileNavBar() {
         </Link>
         <div>
           <SheetClose asChild>
-            <NavContent />
+            <NavContent isSide={false} />
           </SheetClose>
           <SignedOut>
             <div className=" flex flex-col gap-3">

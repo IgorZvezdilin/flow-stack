@@ -9,16 +9,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <main className=" background-light850_dark100 relative ">
+    <main className=" background-light850_dark100 relative">
       <Navbar />
       <div className=" flex">
         <LeftSideBar />
-        <section className=" flex min-h-screen flex-1 flex-col px-6 pb-6 pt-36 max-md:pb-14 sm:px-14">
+        <section className=" min-h-ob flex flex-1 flex-col px-6 pb-6 pt-36 max-md:pb-14 sm:px-14">
           <div className=" mx-auto size-full max-w-5xl">{children}</div>
         </section>
         <RightSideBar />
       </div>
-      Toaster
+      <div
+        className={
+          " z-90 absolute bottom-0 shadow-light-300 dark:shadow-none max-sm:hidden lg:w-[266px]"
+        }
+      >
+        Toaster
+      </div>
     </main>
   );
 }

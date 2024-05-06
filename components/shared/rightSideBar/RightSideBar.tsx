@@ -54,7 +54,7 @@ export default function RightSideBar() {
     },
   ];
   return (
-    <section className=" background-light900_dark200 light-border custom-scrollbar shadow-light-300 sticky right-0 top-0 flex h-screen flex-col overflow-y-hidden border-l p-6 pt-28 max-xl:hidden lg:w-[350px] dark:shadow-none">
+    <section className=" background-light900_dark200 light-border custom-scrollbar sticky right-0 top-0 flex h-screen flex-col overflow-y-hidden border-l p-6 pt-28 shadow-light-300 dark:shadow-none max-xl:hidden lg:w-[350px]">
       <div>
         <h3 className=" h3-bold text-dark200_light900">Top Questions</h3>
         <div className="mt-7 flex w-full flex-col gap-[30px]">

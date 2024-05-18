@@ -56,7 +56,7 @@ export default function QuestionCard({
       </div>
       <div className=" flex-between mt-6 w-full flex-wrap gap-3 max-md:flex-col max-md:items-start">
         <Metric
-          imgUrl={Avatar}
+          imgUrl={author.picture || Avatar}
           alt="user"
           value={author.name}
           title={` - asked ${getTimeStamp(createdAt)}`}

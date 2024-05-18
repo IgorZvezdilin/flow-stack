@@ -108,75 +108,75 @@
   }
 
   .h2-bold {
-    @apply text-[24px] font-bold leading-[31.2px];
+    @apply text-[24px] font-bold leading-[31.2px] tracking-normal;
   }
 
   .h2-semibold {
-    @apply text-[24px] font-semibold leading-[31.2px];
+    @apply text-[24px] font-semibold leading-[31.2px] tracking-normal;
   }
 
   .h3-bold {
-    @apply text-[20px] font-bold leading-[26px];
+    @apply text-[20px] font-bold leading-[26px] tracking-normal;
   }
 
   .h3-semibold {
-    @apply text-[20px] font-semibold leading-[24.8px];
+    @apply text-[20px] font-semibold leading-[24.8px] tracking-normal;
   }
 
   .base-medium {
-    @apply text-[18px] font-medium leading-[25.2px];
+    @apply text-[18px] font-medium leading-[25.2px] tracking-normal;
   }
 
   .base-semibold {
-    @apply text-[18px] font-semibold leading-[25.2px];
+    @apply text-[18px] font-semibold leading-[25.2px] tracking-normal;
   }
 
   .base-bold {
-    @apply text-[18px] font-bold leading-[140%];
+    @apply text-[18px] font-bold leading-[140%] tracking-normal;
   }
 
   .paragraph-regular {
-    @apply text-[16px] font-normal leading-[22.4px];
+    @apply text-[16px] font-normal leading-[22.4px] tracking-normal;
   }
 
   .paragraph-medium {
-    @apply text-[16px] font-medium leading-[22.4px];
+    @apply text-[16px] font-medium leading-[22.4px] tracking-normal;
   }
 
   .paragraph-semibold {
-    @apply text-[16px] font-semibold leading-[20.8px];
+    @apply text-[16px] font-semibold leading-[20.8px] tracking-normal;
   }
 
   .body-regular {
-    @apply text-[14px] font-normal leading-[19.6px];
+    @apply text-[14px] font-normal leading-[19.6px] tracking-normal;
   }
 
   .body-medium {
-    @apply text-[14px] font-medium leading-[18.2px];
+    @apply text-[14px] font-medium leading-[18.2px] tracking-normal;
   }
 
   .body-semibold {
-    @apply text-[14px] font-semibold leading-[18.2px];
+    @apply text-[14px] font-semibold leading-[18.2px] tracking-normal;
   }
 
   .small-regular {
-    @apply text-[12px] font-normal leading-[15.6px];
+    @apply text-[12px] font-normal leading-[15.6px] tracking-normal;
   }
 
   .small-medium {
-    @apply text-[12px] font-medium leading-[15.6px];
+    @apply text-[12px] font-medium leading-[15.6px] tracking-normal;
   }
 
   .small-semibold {
-    @apply text-[12px] font-semibold leading-[15.6px];
+    @apply text-[12px] font-semibold leading-[15.6px] tracking-normal;
   }
 
   .subtle-medium {
-    @apply text-[10px] font-medium leading-[13px] !important;
+    @apply text-[10px] font-medium leading-[13px] tracking-normal !important;
   }
 
   .subtle-regular {
-    @apply text-[10px] font-normal leading-[13px];
+    @apply text-[10px] font-normal leading-[13px] tracking-normal;
   }
 
   .placeholder {

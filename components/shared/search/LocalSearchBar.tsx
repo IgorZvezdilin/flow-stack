@@ -36,7 +36,6 @@ export default function LocalSearchBar({
       <Input
         type="text"
         placeholder={placeholder}
-        value=""
         onChange={handleChange}
         className=" paragraf-regular no-focus placeholder background-light800_darkgradient border-none shadow-none outline-none "
       />

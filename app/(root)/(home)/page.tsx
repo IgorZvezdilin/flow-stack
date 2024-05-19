@@ -6,16 +6,14 @@ import Filter from "@/components/shared/filter/Filter";
 import { HomePageFilters } from "@/constants/filters";
 import HomeFilter from "@/components/shared/filter/HomeFilter";
 import NoResult from "@/components/shared/noResult/NoResult";
-import QuestionCard from "@/components/shared/questionCard/QuestionCard";
+import QuestionCard from "@/components/shared/cards/QuestionCard";
 import { getQuestions } from "@/lib/actions/question.action";
 
 export default async function Home() {
   const { questions } = await getQuestions({});
 
-  console.log(questions);
   return (
     <>
-      <div></div>
       <div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
         <h1 className="h1-bold text-dark100_light900">All questions</h1>
         <Link href={"/ask-question"} className="flex justify-end max-sm:w-full">

@@ -5,6 +5,7 @@ import Question from "@/database/question.model";
 import Tag from "@/database/tag.model";
 import {
   CreateQuestionParams,
+  GetQuestionByIdParams,
   GetQuestionsParams,
 } from "@/lib/actions/shared.types";
 import User from "@/database/user.model";
@@ -56,6 +57,27 @@ export async function getQuestions(params: GetQuestionsParams) {
       .populate({ path: "author", model: User })
       .sort({ createdAt: -1 });
     return { questions };
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function getQuestionById(params: GetQuestionByIdParams) {
+  try {
+    await connectToDatabase();
+
+    const { questionId } = params;
+
+    const question = await Question.findOne({ _id: questionId })
+      .populate({ path: "tags", model: Tag, select: "_id name" })
+      .populate({
+        path: "author",
+        model: User,
+        select: "_id clerkId name picture",
+      })
+      .sort({ createdAt: -1 });
+    return { question };
   } catch (error) {
     console.log(error);
     throw error;

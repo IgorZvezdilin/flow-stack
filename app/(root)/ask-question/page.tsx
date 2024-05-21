@@ -1,17 +1,17 @@
 import Question from "@/components/shared/forms/Question";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
-import { getUseById } from "@/lib/actions/user.action";
+import { getUserById } from "@/lib/actions/user.action";
 
 async function Page() {
   const { userId } = auth();
   if (!userId) redirect("/sign-in");
-  const mongoUser = await getUseById({ userId });
+  const user = await getUserById({ userId });
   return (
     <div className={" h1-bold text-dark100_light900 "}>
       Ask a Question
       <div className={"mt-9"}>
-        <Question mongoUserId={JSON.stringify(mongoUser._id)} />
+        <Question mongoUserId={JSON.stringify(user._id)} />
       </div>
     </div>
   );

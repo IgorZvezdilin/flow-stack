@@ -21,7 +21,7 @@ export default function Metric({
   isAuthor,
 }: IMetric) {
   const metricContent = (
-    <div className=" flex items-center gap-1">
+    <>
       <Image
         src={imgUrl}
         width={18}
@@ -37,7 +37,7 @@ export default function Metric({
           {title}
         </span>
       </p>
-    </div>
+    </>
   );
 
   if (href) {
@@ -48,5 +48,5 @@ export default function Metric({
     );
   }
 
-  return <div className=" flex-center flex-1 gap-1">{metricContent}</div>;
+  return <div className="flex-center flex-wrap gap-1">{metricContent}</div>;
 }

@@ -1,12 +1,12 @@
 import Question from "@/components/shared/forms/Question";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
-import { getUseById } from "@/lib/actions/user.action";
+import { getUserById } from "@/lib/actions/user.action";
 
 async function Page() {
   const { userId } = auth();
   if (!userId) redirect("/sign-in");
-  const { user } = await getUseById({ userId });
+  const user = await getUserById({ userId });
   return (
     <div className={" h1-bold text-dark100_light900 "}>
       Ask a Question

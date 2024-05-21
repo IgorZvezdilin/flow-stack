@@ -6,17 +6,18 @@ import {
   CreateUserParams,
   DeleteUserParams,
   GetAllUsersParams,
+  GetUserByIdParams,
   UpdateUserParams,
 } from "@/lib/actions/shared.types";
 import { revalidatePath } from "next/cache";
 import Question from "@/database/question.model";
 
-export async function getUseById(params: any) {
+export async function getUserById(params: GetUserByIdParams) {
   try {
     await connectToDatabase();
     const { userId } = params;
     const user = await User.findOne({ clerkId: userId });
-    return { user };
+    return user;
   } catch (error) {
     console.log(error);
     throw error;

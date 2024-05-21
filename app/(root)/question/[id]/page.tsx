@@ -7,6 +7,12 @@ import { formatBigNumber, getTimeStamp } from "@/lib/utils";
 import Answer from "@/public/assets/icons/message.svg";
 import Eye from "@/public/assets/icons/eye.svg";
 import ParseHTML from "@/components/shared/parseHTML/parseHTML";
+import RenderTag from "@/components/shared/renderTag/RenderTag";
+import AnswerForm from "@/components/shared/forms/Answer";
+import { auth } from "@clerk/nextjs";
+import { getUserById } from "@/lib/actions/user.action";
+import AnswerList from "@/components/shared/answerList/AnswerList";
+import Vote from "@/components/shared/vote/Vote";
 
 interface IPageProps {
   params: {
@@ -15,7 +21,11 @@ interface IPageProps {
 }
 const Page = async ({ params }: IPageProps) => {
   const { question } = await getQuestionById({ questionId: params.id });
-  console.log(question);
+  const { userId } = auth();
+  let mongoUser;
+  if (userId) {
+    mongoUser = await getUserById({ userId });
+  }
   return (
     <>
       <div className={" flex-start w-full flex-col"}>
@@ -39,7 +49,18 @@ const Page = async ({ params }: IPageProps) => {
               {question.author.name}
             </p>
           </Link>
-          <div className={"flex justify-end"}>VOTING</div>
+          <div className={"flex justify-end"}>
+            <Vote
+              type={"question"}
+              itemId={JSON.stringify(question._id)}
+              userId={JSON.stringify(mongoUser._id)}
+              upvotes={question.upvotes.length}
+              hasUpvoted={question.upvotes.includes(mongoUser._id)}
+              downvotes={question.downvotes.length}
+              hasDownvoted={question.downvotes.includes(mongoUser._id)}
+              hasSaved={mongoUser?.saved.includes(question._id)}
+            />
+          </div>
         </div>
         <h2
           className={
@@ -49,7 +70,6 @@ const Page = async ({ params }: IPageProps) => {
           {question.title}
         </h2>
       </div>
-
       <div className={"mb-8 mt-5 flex flex-wrap gap-4"}>
         <Metric
           imgUrl={Clock}
@@ -74,6 +94,28 @@ const Page = async ({ params }: IPageProps) => {
         />
       </div>
       <ParseHTML data={question.content} />
+
+      <div className={"mt-8 flex flex-wrap gap-2"}>
+        {question.tags.map((tag: any) => (
+          <RenderTag
+            key={tag._id}
+            _id={tag._id}
+            name={tag.name}
+            showCount={false}
+          />
+        ))}
+      </div>
+
+      <AnswerList
+        questionId={question._id}
+        userId={JSON.stringify(mongoUser._id)}
+      />
+
+      <AnswerForm
+        question={question.content}
+        questionId={JSON.stringify(question._id)}
+        userId={JSON.stringify(mongoUser._id)}
+      />
     </>
   );
 };

@@ -4,15 +4,26 @@ import { sideBarLinks } from "@/constants";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { useAuth } from "@clerk/nextjs";
 
 export default function NavContent({ isSide = true }: { isSide?: boolean }) {
   const pathname = usePathname();
+  const { userId } = useAuth();
   return (
     <section className="flex h-full flex-col gap-6 pt-16">
       {sideBarLinks.map((item, index) => {
         const isActive =
           (pathname.includes(item.route) && item.route.length > 1) ||
           pathname === item.route;
+
+        if (item.route === "/profile") {
+          if (userId) {
+            item.route = `${item.route}/${userId}`;
+          } else {
+            return null;
+          }
+        }
+
         return (
           <Link
             key={index}

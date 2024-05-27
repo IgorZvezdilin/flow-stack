@@ -1,5 +1,6 @@
 "use server";
 import {
+  AnswerVoteParams,
   CreateAnswerParams,
   GetAnswersParams,
 } from "@/lib/actions/shared.types";
@@ -19,9 +20,12 @@ export async function createAnswer(params: CreateAnswerParams) {
       content,
     });
 
-    await Question.findByIdAndUpdate(question, {
-      $push: { answers: answer._id },
-    });
+    await Question.findByIdAndUpdate(
+      { _id: question },
+      {
+        $push: { answers: answer._id },
+      },
+    );
 
     revalidatePath(path);
   } catch (error) {
@@ -41,6 +45,80 @@ export async function getAllAnswers(params: GetAnswersParams) {
       .sort({ createdAt: -1 });
 
     return { answers };
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function upvoteAnswer(params: AnswerVoteParams) {
+  try {
+    await connectToDatabase();
+    const { answerId, userId, path, hasupVoted, hasdownVoted } = params;
+    let upvoteQuery = {};
+    if (hasupVoted) {
+      upvoteQuery = { $pull: { upvotes: userId } };
+    } else if (hasdownVoted) {
+      upvoteQuery = {
+        $pull: { downvotes: userId },
+        $push: { upvotes: userId },
+      };
+    } else {
+      upvoteQuery = {
+        $addToSet: { upvotes: userId },
+      };
+    }
+
+    const answer = await Answer.findOneAndUpdate(
+      { _id: answerId },
+      upvoteQuery,
+      {
+        new: true,
+      },
+    );
+    // increment Author reputation +10
+    if (!answer) {
+      throw new Error("Answer not found");
+    }
+    revalidatePath(path);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function downvoteAnswer(params: AnswerVoteParams) {
+  try {
+    await connectToDatabase();
+
+    const { answerId, userId, path, hasupVoted, hasdownVoted } = params;
+    let upvoteQuery = {};
+
+    if (hasdownVoted) {
+      upvoteQuery = { $pull: { downvotes: userId } };
+    } else if (hasupVoted) {
+      upvoteQuery = {
+        $pull: { upvotes: userId },
+        $push: { downvotes: userId },
+      };
+    } else {
+      upvoteQuery = {
+        $addToSet: { downvotes: userId },
+      };
+    }
+
+    const answer = await Answer.findOneAndUpdate(
+      { _id: answerId },
+      upvoteQuery,
+      {
+        new: true,
+      },
+    );
+    // increment Author reputation +10
+    if (!answer) {
+      throw new Error("Answer not found");
+    }
+    revalidatePath(path);
   } catch (error) {
     console.log(error);
     throw error;

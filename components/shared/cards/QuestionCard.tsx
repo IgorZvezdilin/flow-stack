@@ -23,6 +23,7 @@ interface IQuestionCard {
   views: number;
   answers: number;
   createdAt: Date;
+  clerkId: string | null;
 }
 
 export default function QuestionCard({
@@ -76,7 +77,7 @@ export default function QuestionCard({
             imgUrl={Answer}
             alt="asnwers"
             value={formatBigNumber(answers)}
-            title=" Ansvers"
+            title=" Answers"
             textStyles=" small-medium text-dark400_light800"
           />
           <Metric

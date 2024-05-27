@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 
 export default function LeftSideBar() {
   return (
-    <section className=" background-light900_dark200 light-border sticky left-0 top-0 flex h-screen flex-col justify-between overflow-y-hidden border-r p-6 pt-28 shadow-light-300 dark:shadow-none max-sm:hidden lg:w-[266px]">
+    <section className=" background-light900_dark200 light-border sticky left-0 top-0 flex h-screen flex-col justify-between overflow-y-hidden border-r p-6 pt-28 shadow-light-300 max-sm:hidden lg:w-[266px] dark:shadow-none">
       <div className="flex flex-1 flex-col gap-6">
         <NavContent />
         <SignedOut>

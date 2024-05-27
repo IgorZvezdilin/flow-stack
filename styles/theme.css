@@ -140,7 +140,7 @@
   }
 
   .paragraph-medium {
-    @apply text-[16px] font-medium leading-[22.4px] tracking-normal;
+    @apply text-[16px] font-medium leading-[22.4px] pt-1.5 tracking-normal;
   }
 
   .paragraph-semibold {

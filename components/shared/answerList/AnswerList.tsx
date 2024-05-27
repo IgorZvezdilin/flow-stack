@@ -20,6 +20,9 @@ const AnswerList = async ({
   filter,
 }: IAnswerList) => {
   const { answers } = await getAllAnswers({ questionId });
+
+  console.log("this is answers", answers);
+
   return (
     <div className={" mt-11"}>
       <div className={"flex items-center justify-between"}>
@@ -28,7 +31,7 @@ const AnswerList = async ({
       </div>
       <div>
         {answers.map((answer) => (
-          <article key={answer._id}>
+          <article key={answer._id} className={"light-border border-b py-10"}>
             <div className={"flex items-center justify-between"}>
               <div
                 className={
@@ -61,9 +64,9 @@ const AnswerList = async ({
                 </Link>
                 <div className={" flex justify-end"}>
                   <Vote
-                    type={"question"}
+                    type={"Answer"}
                     itemId={JSON.stringify(answer._id)}
-                    userId={userId}
+                    userId={JSON.stringify(userId)}
                     upvotes={answer.upvotes.length}
                     hasUpvoted={answer.upvotes.includes(userId)}
                     downvotes={answer.downvotes.length}

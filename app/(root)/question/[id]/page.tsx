@@ -21,6 +21,7 @@ interface IPageProps {
 }
 const Page = async ({ params }: IPageProps) => {
   const { question } = await getQuestionById({ questionId: params.id });
+
   const { userId } = auth();
   let mongoUser;
   if (userId) {
@@ -51,7 +52,7 @@ const Page = async ({ params }: IPageProps) => {
           </Link>
           <div className={"flex justify-end"}>
             <Vote
-              type={"question"}
+              type={"Question"}
               itemId={JSON.stringify(question._id)}
               userId={JSON.stringify(mongoUser._id)}
               upvotes={question.upvotes.length}
@@ -106,10 +107,7 @@ const Page = async ({ params }: IPageProps) => {
         ))}
       </div>
 
-      <AnswerList
-        questionId={question._id}
-        userId={JSON.stringify(mongoUser._id)}
-      />
+      <AnswerList questionId={question._id} userId={mongoUser._id} />
 
       <AnswerForm
         question={question.content}

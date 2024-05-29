@@ -31,7 +31,7 @@ export default function MobileNavBar() {
       >
         <Link href="/" className=" flex items-center gap-1 ">
           <Image src={DevFlow} alt={"DevFlow"} width={23} height={23} />
-          <p className=" h2-bold font-spaceGrotesk text-dark100_light900">
+          <p className=" h2-bold text-dark100_light900 font-spaceGrotesk">
             Dev <span className=" text-primary-500">Overflow</span>
           </p>
         </Link>

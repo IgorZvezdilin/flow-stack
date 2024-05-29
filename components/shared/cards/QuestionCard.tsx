@@ -6,6 +6,8 @@ import Answer from "@/public/assets/icons/message.svg";
 import Eye from "@/public/assets/icons/eye.svg";
 import Avatar from "@/public/assets/icons/avatar.svg";
 import { formatBigNumber, getTimeStamp } from "@/lib/utils";
+import { SignedIn } from "@clerk/nextjs";
+import EditDeleteAction from "@/components/shared/EditDeleteAction";
 
 interface IQuestionCard {
   _id: number;
@@ -15,15 +17,16 @@ interface IQuestionCard {
     name: string;
   }[];
   author: {
-    _id: number;
+    _id: string;
     name: string;
+    clerkId: string;
     picture: string;
   };
   upvotes: number;
   views: number;
   answers: number;
   createdAt: Date;
-  clerkId: string | null;
+  clerkId?: string | null;
 }
 
 export default function QuestionCard({
@@ -35,7 +38,10 @@ export default function QuestionCard({
   views,
   answers,
   createdAt,
+  clerkId,
 }: IQuestionCard) {
+  const showActionButtons = clerkId && clerkId === author.clerkId;
+
   return (
     <div className="card-wrapper rounded-[10px] p-9 sm:px-11 ">
       <div className=" flex flex-col-reverse items-start justify-between gap-5 sm:flex-row">
@@ -49,6 +55,11 @@ export default function QuestionCard({
             </h3>
           </Link>
         </div>
+        <SignedIn>
+          {showActionButtons && (
+            <EditDeleteAction type={"Question"} itemId={JSON.stringify(_id)} />
+          )}
+        </SignedIn>
       </div>
       <div className=" mt-3.5 flex w-full flex-wrap justify-start gap-2">
         {tags.map((tag) => (
@@ -61,7 +72,7 @@ export default function QuestionCard({
           alt="user"
           value={author.name}
           title={` - asked ${getTimeStamp(createdAt)}`}
-          href={`/profile/${author._id}`}
+          href={`/profile/${author.clerkId}`}
           textStyles=" small-medium text-dark400_light700"
           isAuthor
         />

@@ -12,7 +12,7 @@ export default async function QuestionTab({
   userId,
   clerkId,
 }: IQuestionTab) {
-  const { totalQuestions, questions } = await getUserQuestions({ userId });
+  const { questions } = await getUserQuestions({ userId });
 
   return (
     <div className={"flex flex-col gap-2"}>

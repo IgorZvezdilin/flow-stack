@@ -9,7 +9,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <main className=" background-light850_dark100 relative min-h-[100vh]">
+    <main className=" background-light850_dark100 relative min-h-screen">
       <Navbar />
       <div className=" flex">
         <LeftSideBar />
@@ -20,7 +20,7 @@ export default function RootLayout({
       </div>
       <div
         className={
-          " z-90 absolute bottom-0 shadow-light-300 dark:shadow-none max-sm:hidden lg:w-[266px]"
+          " z-90 absolute bottom-0 shadow-light-300 max-sm:hidden lg:w-[266px] dark:shadow-none"
         }
       >
         Toaster

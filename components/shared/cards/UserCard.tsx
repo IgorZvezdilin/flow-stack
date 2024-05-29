@@ -16,15 +16,15 @@ interface IUser {
 const UserCard = async ({ user }: IUser) => {
   const interactedTag = await getTopInteractedTags({ userId: user.id });
   return (
-    <Link
-      href={`/users/${user.clerkId}`}
+    <article
       className={
-        "shadow-light100_darknone w-full max-xs:min-w-full xs:w-[260px]"
+        "background-light900_dark200 light-border flex w-full flex-col items-center justify-center rounded-2xl border p-8"
       }
     >
-      <article
+      <Link
+        href={`/users/${user.clerkId}`}
         className={
-          "background-light900_dark200 light-border flex w-full flex-col items-center justify-center rounded-2xl border p-8"
+          "shadow-light100_darknone w-full max-xs:min-w-full xs:w-[260px]"
         }
       >
         <Image
@@ -42,19 +42,19 @@ const UserCard = async ({ user }: IUser) => {
             @{user.username}
           </p>
         </div>
-        <div className={"mt-5"}>
-          {interactedTag.length > 0 ? (
-            <div className={"flex items-center gap-2"}>
-              {interactedTag.map((tag) => (
-                <RenderTag key={tag.name} _id={tag._id} name={tag.name} />
-              ))}
-            </div>
-          ) : (
-            <Badge>No tags yet</Badge>
-          )}
-        </div>
-      </article>
-    </Link>
+      </Link>
+      <div className={"mt-5"}>
+        {interactedTag.length > 0 ? (
+          <div className={"flex items-center gap-2"}>
+            {interactedTag.map((tag) => (
+              <RenderTag key={tag.name} _id={tag._id} name={tag.name} />
+            ))}
+          </div>
+        ) : (
+          <Badge>No tags yet</Badge>
+        )}
+      </div>
+    </article>
   );
 };
 

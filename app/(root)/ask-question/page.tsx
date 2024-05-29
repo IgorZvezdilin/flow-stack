@@ -1,7 +1,7 @@
-import Question from "@/components/shared/forms/Question";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import { getUserById } from "@/lib/actions/user.action";
+import QuestionForm from "@/components/shared/forms/QuestionForm";
 
 async function Page() {
   const { userId } = auth();
@@ -11,7 +11,7 @@ async function Page() {
     <div className={" h1-bold text-dark100_light900 "}>
       Ask a Question
       <div className={"mt-9"}>
-        <Question mongoUserId={JSON.stringify(user._id)} />
+        <QuestionForm mongoUserId={JSON.stringify(user._id)} />
       </div>
     </div>
   );

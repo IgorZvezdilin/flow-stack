@@ -19,41 +19,59 @@ import { Input } from "@/components/ui/input";
 import { QuestionSchema } from "@/lib/validations";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
-import { createQuestion } from "@/lib/actions/question.action";
+import { createQuestion, editQuestion } from "@/lib/actions/question.action";
 import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "@/context/ThemeProvider";
 
-const type: any = "create";
-
-interface IQuestion {
+interface IQuestionForm {
   mongoUserId: string;
+  type?: "Create" | "Edit";
+  questionDetails?: string;
 }
-const Question = ({ mongoUserId }: IQuestion) => {
+const QuestionForm = ({
+  mongoUserId,
+  type = "Create",
+  questionDetails,
+}: IQuestionForm) => {
   const { mode } = useTheme();
   const router = useRouter();
   const pathname = usePathname();
   const editorRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
+  const parsedQuestion = JSON.parse(questionDetails || "");
+
   const form = useForm<z.infer<typeof QuestionSchema>>({
     resolver: zodResolver(QuestionSchema),
     defaultValues: {
-      title: "",
-      explanation: "",
-      tags: [],
+      title: parsedQuestion.title || "",
+      explanation: parsedQuestion.content || "",
+      tags: parsedQuestion.tags.map((tag: any) => tag.name),
     },
   });
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof QuestionSchema>) {
+    setIsSubmitting(true);
     try {
-      await createQuestion({
-        title: values.title,
-        tags: values.tags,
-        content: values.explanation,
-        author: JSON.parse(mongoUserId),
-        path: pathname,
-      });
-      router.push("/");
+      if (type === "Edit") {
+        await editQuestion({
+          questionId: parsedQuestion._id,
+          title: values.title,
+          content: values.explanation,
+          path: pathname,
+        });
+        router.push(`/question/${parsedQuestion._id}`);
+      } else {
+        await createQuestion({
+          title: values.title,
+          tags: values.tags,
+          content: values.explanation,
+          author: JSON.parse(mongoUserId),
+          path: pathname,
+        });
+        router.push("/");
+      }
     } catch (err) {
       console.log(err);
     } finally {
@@ -61,7 +79,7 @@ const Question = ({ mongoUserId }: IQuestion) => {
     }
   }
 
-  const handleInputKeyDown = (event: React.KeyboardEvent, field: any) => {
+  const handleInputKeyDown = async (event: React.KeyboardEvent, field: any) => {
     if (event.key === "Enter" && field.name === "tags") {
       event.preventDefault();
       const tagInput = event.target as HTMLInputElement;
@@ -79,7 +97,7 @@ const Question = ({ mongoUserId }: IQuestion) => {
           tagInput.value = "";
           form.clearErrors("tags");
         } else {
-          form.trigger();
+          await form.trigger();
         }
       }
     }
@@ -100,7 +118,7 @@ const Question = ({ mongoUserId }: IQuestion) => {
           control={form.control}
           name="title"
           render={({ field }) => (
-            <FormItem className={"flex w-full flex-col"}>
+            <FormItem className={" flex w-full flex-col"}>
               <FormLabel className={"paragraph-semibold text-dark400_light900"}>
                 Question title <span className={"text-red-500"}>*</span>
               </FormLabel>
@@ -127,7 +145,7 @@ const Question = ({ mongoUserId }: IQuestion) => {
           control={form.control}
           name="explanation"
           render={({ field }) => (
-            <FormItem className={"flex w-full flex-col gap-3"}>
+            <FormItem className={"mt-10 flex w-full flex-col gap-3"}>
               <FormLabel className={"paragraph-semibold text-dark400_light900"}>
                 Detailed explanation of your problem?
                 <span className={"text-red-500"}>*</span>
@@ -139,6 +157,7 @@ const Question = ({ mongoUserId }: IQuestion) => {
                   onInit={(evt, editor) => (editorRef.current = editor)}
                   onBlur={field.onBlur}
                   onEditorChange={(content) => field.onChange(content)}
+                  initialValue={parsedQuestion.content || ""}
                   init={{
                     height: 350,
                     menubar: false,
@@ -184,7 +203,7 @@ const Question = ({ mongoUserId }: IQuestion) => {
           control={form.control}
           name="tags"
           render={({ field }) => (
-            <FormItem className={"flex w-full flex-col"}>
+            <FormItem className={"mt-10 flex w-full flex-col"}>
               <FormLabel className={"paragraph-semibold text-dark400_light900"}>
                 Tags
               </FormLabel>
@@ -194,6 +213,7 @@ const Question = ({ mongoUserId }: IQuestion) => {
                     className={
                       "no-focus paragraph-regular background-light900_dark300 light-border-2 text-dark300_light700 min-h-[56px] border"
                     }
+                    disabled={type === "Edit"}
                     placeholder="Add tags..."
                     onKeyDown={(event) => handleInputKeyDown(event, field)}
                   />
@@ -207,16 +227,18 @@ const Question = ({ mongoUserId }: IQuestion) => {
                           }
                         >
                           {tag}{" "}
-                          <Image
-                            src={"/assets/icons/close.svg"}
-                            alt={"close-icon"}
-                            height={12}
-                            width={12}
-                            className={
-                              "cursor-pointer object-contain invert-0 dark:invert"
-                            }
-                            onClick={() => handleRemoveTag(tag, field)}
-                          />
+                          {type !== "Edit" && (
+                            <Image
+                              src={"/assets/icons/close.svg"}
+                              alt={"close-icon"}
+                              height={12}
+                              width={12}
+                              className={
+                                "cursor-pointer object-contain invert-0 dark:invert"
+                              }
+                              onClick={() => handleRemoveTag(tag, field)}
+                            />
+                          )}
                         </Badge>
                       ))}
                     </div>
@@ -237,9 +259,9 @@ const Question = ({ mongoUserId }: IQuestion) => {
           disabled={isSubmitting}
         >
           {isSubmitting ? (
-            <>{type === "edit" ? "Editing..." : "Posting..."}</>
+            <>{type === "Edit" ? "Editing..." : "Posting..."}</>
           ) : (
-            <>{type === "edit" ? "Edit question" : "Ask a question"}</>
+            <>{type === "Edit" ? "Edit question" : "Ask a question"}</>
           )}
         </Button>
       </form>
@@ -247,4 +269,4 @@ const Question = ({ mongoUserId }: IQuestion) => {
   );
 };
 
-export default Question;
+export default QuestionForm;

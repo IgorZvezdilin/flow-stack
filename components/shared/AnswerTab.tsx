@@ -1,6 +1,6 @@
 import { SearchParamsProps } from "@/types";
 import { getUserAnswers } from "@/lib/actions/user.action";
-import AnswerCard from "@/components/shared/AnswerCard";
+import AnswerCard from "@/components/shared/cards/AnswerCard";
 
 interface IAnswerTab extends SearchParamsProps {
   userId: string;
@@ -12,7 +12,7 @@ export default async function AnswerTab({
   userId,
   clerkId,
 }: IAnswerTab) {
-  const { totalAnswers, answers } = await getUserAnswers({ userId });
+  const { answers } = await getUserAnswers({ userId });
 
   return (
     <div className={"flex flex-col gap-2"}>

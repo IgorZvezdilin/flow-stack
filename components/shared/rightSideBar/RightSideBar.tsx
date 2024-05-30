@@ -2,67 +2,23 @@ import Link from "next/link";
 import Image from "next/image";
 import RightArrow from "@/public/assets/icons/arrow-right.svg";
 import RenderTag from "../renderTag/RenderTag";
+import { getHotQuestions } from "@/lib/actions/question.action";
+import { getPopularTags } from "@/lib/actions/tag.action";
 
-export default function RightSideBar() {
-  const hotQuestions = [
-    {
-      id: 1,
-      title: "hot questions",
-    },
-    {
-      id: 2,
-      title: "Looooooooooogn orgkln hot questions",
-    },
-    {
-      id: 3,
-      title: ";lsmf;slmf;sflm orgkln hot questions",
-    },
-    {
-      id: 4,
-      title: "e;lkgje orgkln hot questions",
-    },
-    {
-      id: 5,
-      title: "lfksgns;flkgm s;dlgkm",
-    },
-  ];
-  const popularTags = [
-    {
-      id: 1,
-      title: "JavaScript",
-      questions: 5,
-    },
-    {
-      id: 2,
-      title: "ReactJS",
-      questions: 3,
-    },
-    {
-      id: 3,
-      title: "NextJS",
-      questions: 2,
-    },
-    {
-      id: 4,
-      title: "VueJS",
-      questions: 1,
-    },
-    {
-      id: 5,
-      title: "Angular",
-      questions: 3,
-    },
-  ];
+export default async function RightSideBar() {
+  const { questions } = await getHotQuestions();
+  const { popularTags } = await getPopularTags();
+
   return (
     <section className=" background-light900_dark200 light-border custom-scrollbar sticky right-0 top-0 flex h-screen flex-col overflow-y-hidden border-l p-6 pt-28 shadow-light-300 max-xl:hidden lg:w-[350px] dark:shadow-none">
       <div>
         <h3 className=" h3-bold text-dark200_light900">Top Questions</h3>
         <div className="mt-7 flex w-full flex-col gap-[30px]">
-          {hotQuestions.map((question, index) => {
+          {questions.map((question: any, index: number) => {
             return (
               <Link
                 key={index}
-                href={`/questions/${question.id}`}
+                href={`/question/${question.id}`}
                 className="flex cursor-pointer items-center justify-between gap-7"
               >
                 <p className=" body-medium text-dark500_light700">
@@ -87,9 +43,9 @@ export default function RightSideBar() {
             return (
               <RenderTag
                 key={index}
-                _id={tag.id}
-                name={tag.title}
-                totalQuestions={tag.questions}
+                _id={tag._id}
+                name={tag.name}
+                totalQuestions={tag.numberOfQuestions}
                 showCount
               />
             );

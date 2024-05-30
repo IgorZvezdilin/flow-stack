@@ -21,8 +21,6 @@ const AnswerList = async ({
 }: IAnswerList) => {
   const { answers } = await getAllAnswers({ questionId });
 
-  console.log("this is answers", answers);
-
   return (
     <div className={" mt-11"}>
       <div className={"flex items-center justify-between"}>

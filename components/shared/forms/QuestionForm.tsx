@@ -39,14 +39,14 @@ const QuestionForm = ({
   const editorRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
-  const parsedQuestion = JSON.parse(questionDetails || "");
+  const parsedQuestion = JSON.parse(questionDetails ?? "{}");
 
   const form = useForm<z.infer<typeof QuestionSchema>>({
     resolver: zodResolver(QuestionSchema),
     defaultValues: {
       title: parsedQuestion.title || "",
       explanation: parsedQuestion.content || "",
-      tags: parsedQuestion.tags.map((tag: any) => tag.name),
+      tags: parsedQuestion?.tags?.map((tag: any) => tag.name) || [],
     },
   });
 

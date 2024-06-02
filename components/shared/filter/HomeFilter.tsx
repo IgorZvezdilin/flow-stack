@@ -21,7 +21,6 @@ export default function HomeFilter() {
           ? null
           : event.currentTarget.value,
     });
-    console.log(newUrl);
     router.push(newUrl, { scroll: false });
     setIsActive(
       event.currentTarget.value === isActive ? "" : event.currentTarget.value,

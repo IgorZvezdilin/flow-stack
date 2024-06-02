@@ -36,8 +36,6 @@ export default function LocalSearchBar({
           value,
         });
 
-        console.log(newUrl);
-
         router.push(newUrl, { scroll: false });
       } else {
         if (pathname === route) {

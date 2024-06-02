@@ -24,7 +24,6 @@ const Page = async ({ params }: IPageProps) => {
           questionDetails={JSON.stringify(question)}
         />
       </div>
-      <div className={" flex-start w-full flex-col"}>here, {params.index}</div>
     </>
   );
 };

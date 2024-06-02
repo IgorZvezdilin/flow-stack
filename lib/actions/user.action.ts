@@ -32,10 +32,6 @@ export async function getUserById(params: GetUserByIdParams) {
 export async function createUser(params: CreateUserParams) {
   try {
     await connectToDatabase();
-    console.log("----------------------------------");
-    console.log("this is data for create user: ");
-    console.log(params);
-    console.log("----------------------------------");
     const user = await User.create(params);
     return { user };
   } catch (error) {
@@ -105,13 +101,14 @@ export async function toggleSaveQuestion(params: ToggleSaveQuestionParams) {
     if (!user) {
       throw new Error("User not found");
     }
+
     let updatedQuery;
     if (user.saved.includes(questionId)) {
       updatedQuery = { $pull: { saved: questionId } };
     } else {
       updatedQuery = { $addToSet: { saved: questionId } };
     }
-    await User.findOneAndUpdate({ userId }, updatedQuery, { new: true });
+    await User.findOneAndUpdate({ _id: userId }, updatedQuery, { new: true });
     revalidatePath(path);
   } catch (error) {
     console.log(error);

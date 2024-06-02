@@ -35,8 +35,16 @@ export async function getTopInteractedTags(params: GetTopInteractedTagsParams) {
 
 export async function getAllTags(params: GetAllTagsParams) {
   try {
+    const { searchQuery } = params;
+
+    const query: FilterQuery<typeof Tag> = {};
+
+    if (searchQuery) {
+      query.$or = [{ name: { $regex: new RegExp(searchQuery, "i") } }];
+    }
+
     await connectToDatabase();
-    const tags = await Tag.find({}).populate({
+    const tags = await Tag.find(query).populate({
       path: "questions",
       model: Question,
     });
@@ -53,10 +61,16 @@ export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
     const { tagId, searchQuery } = params;
     const tagFilter: FilterQuery<ITag> = { _id: tagId };
 
+    const query: FilterQuery<typeof Tag> = {};
+
+    if (searchQuery) {
+      query.$or = [{ title: { $regex: new RegExp(searchQuery, "i") } }];
+    }
+
     const tag = await Tag.findOne(tagFilter).populate({
       path: "questions",
       model: Question,
-      match: searchQuery ? { $title: { $regex: searchQuery } } : {},
+      match: query,
       options: {
         sort: {
           createdAt: -1,

@@ -2,6 +2,9 @@
 
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import React, { useCallback, useState } from "react";
+import { debounce, formUrlQuery, removeKeysFromQuery } from "@/lib/utils";
 
 interface ILocalSearchBar {
   route: string;
@@ -18,7 +21,40 @@ export default function LocalSearchBar({
   placeholder,
   otherClasses,
 }: ILocalSearchBar) {
-  const handleChange = () => {};
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const query = searchParams.get("q");
+  const [search, setSearch] = useState<string>(query ?? "");
+
+  const updateQuery = useCallback(
+    debounce((value: string) => {
+      if (value) {
+        const newUrl = formUrlQuery({
+          params: searchParams.toString(),
+          key: "q",
+          value,
+        });
+
+        console.log(newUrl);
+
+        router.push(newUrl, { scroll: false });
+      } else {
+        if (pathname === route) {
+          const newUrl = removeKeysFromQuery({
+            params: searchParams.toString(),
+            keysToRemove: ["q"],
+          });
+          router.push(newUrl, { scroll: false });
+        }
+      }
+    }, 500),
+    [router, pathname, route, searchParams],
+  );
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(event.currentTarget.value);
+    updateQuery(event.currentTarget.value);
+  };
 
   return (
     <div
@@ -35,6 +71,7 @@ export default function LocalSearchBar({
       )}
       <Input
         type="text"
+        value={search}
         placeholder={placeholder}
         onChange={handleChange}
         className=" paragraf-regular no-focus placeholder background-light800_darkgradient border-none shadow-none outline-none "

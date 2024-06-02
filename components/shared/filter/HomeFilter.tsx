@@ -2,10 +2,32 @@
 
 import { Button } from "@/components/ui/button";
 import { HomePageFilters } from "@/constants/filters";
+import { useRouter, useSearchParams } from "next/navigation";
+import React, { useState } from "react";
+import { formUrlQuery } from "@/lib/utils";
 
 export default function HomeFilter() {
-  const isActive = "frequent";
-  const handleClick = () => {};
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const currentFilter = searchParams.get("filter");
+  const [isActive, setIsActive] = useState(currentFilter);
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const newUrl = formUrlQuery({
+      params: searchParams.toString(),
+      key: "filter",
+      value:
+        event.currentTarget.value === isActive
+          ? null
+          : event.currentTarget.value,
+    });
+    console.log(newUrl);
+    router.push(newUrl, { scroll: false });
+    setIsActive(
+      event.currentTarget.value === isActive ? "" : event.currentTarget.value,
+    );
+  };
+
   return (
     <div className="mt-10 hidden flex-wrap gap-3 md:flex">
       {HomePageFilters.map((filter) => {

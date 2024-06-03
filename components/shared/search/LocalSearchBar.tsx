@@ -3,7 +3,7 @@
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import { debounce, formUrlQuery, removeKeysFromQuery } from "@/lib/utils";
 
 interface ILocalSearchBar {
@@ -27,28 +27,25 @@ export default function LocalSearchBar({
   const query = searchParams.get("q");
   const [search, setSearch] = useState<string>(query ?? "");
 
-  const updateQuery = useCallback(
-    debounce((value: string) => {
-      if (value) {
-        const newUrl = formUrlQuery({
-          params: searchParams.toString(),
-          key: "q",
-          value,
-        });
+  const updateQuery = debounce((value: string) => {
+    if (value) {
+      const newUrl = formUrlQuery({
+        params: searchParams.toString(),
+        key: "q",
+        value,
+      });
 
+      router.push(newUrl, { scroll: false });
+    } else {
+      if (pathname === route) {
+        const newUrl = removeKeysFromQuery({
+          params: searchParams.toString(),
+          keysToRemove: ["q"],
+        });
         router.push(newUrl, { scroll: false });
-      } else {
-        if (pathname === route) {
-          const newUrl = removeKeysFromQuery({
-            params: searchParams.toString(),
-            keysToRemove: ["q"],
-          });
-          router.push(newUrl, { scroll: false });
-        }
       }
-    }, 500),
-    [router, pathname, route, searchParams],
-  );
+    }
+  }, 500);
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.currentTarget.value);
     updateQuery(event.currentTarget.value);

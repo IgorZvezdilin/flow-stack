@@ -9,11 +9,13 @@ import NoResult from "@/components/shared/noResult/NoResult";
 import QuestionCard from "@/components/shared/cards/QuestionCard";
 import { getQuestions } from "@/lib/actions/question.action";
 import { SearchParamsProps } from "@/types";
+import Pagination from "@/components/shared/pagination";
 
 export default async function Home({ searchParams }: SearchParamsProps) {
-  const { questions } = await getQuestions({
+  const { questions, isNext } = await getQuestions({
     searchQuery: searchParams.q,
     filter: searchParams.filter,
+    page: searchParams.page ? Number(searchParams.page) : 1,
   });
 
   return (
@@ -36,7 +38,7 @@ export default async function Home({ searchParams }: SearchParamsProps) {
         />
         <Filter
           filters={HomePageFilters}
-          otherClasses="min-h-[38px] sm:min-w-[170px]"
+          otherClasses="min-h-[56px] sm:min-w-[170px]"
           containerClasses="hidden max-md:flex"
         />
       </div>
@@ -68,6 +70,10 @@ export default async function Home({ searchParams }: SearchParamsProps) {
           />
         )}
       </div>
+      <Pagination
+        pageNumber={searchParams.page ? Number(searchParams.page) : 1}
+        isNext={isNext}
+      />
     </>
   );
 }

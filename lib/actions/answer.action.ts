@@ -10,6 +10,7 @@ import Question from "@/database/question.model";
 import { revalidatePath } from "next/cache";
 import Answer from "@/database/answer.model";
 import Interaction from "@/database/interaction.model";
+import { PipelineStage } from "mongoose";
 
 export async function createAnswer(params: CreateAnswerParams) {
   try {
@@ -39,12 +40,85 @@ export async function getAllAnswers(params: GetAnswersParams) {
   try {
     await connectToDatabase();
 
-    const { questionId } = params;
-    const answers = await Answer.find({
-      question: questionId,
-    })
-      .populate("author", "_id clerkId name picture ")
-      .sort({ createdAt: -1 });
+    const { questionId, sortBy } = params;
+
+    let sortQuery: PipelineStage = { $sort: { createdAt: -1 } };
+    if (sortBy) {
+      switch (sortBy) {
+        case "highestUpvotes":
+          sortQuery = {
+            $sort: {
+              upvotesLength: -1,
+            },
+          };
+          break;
+        case "lowestUpvotes":
+          sortQuery = {
+            $sort: {
+              upvotesLength: 1,
+            },
+          };
+          break;
+        case "recent":
+          sortQuery = {
+            $sort: {
+              createdAt: -1,
+            },
+          };
+          break;
+        case "old":
+          sortQuery = {
+            $sort: {
+              createdAt: 1,
+            },
+          };
+          break;
+        default:
+          break;
+      }
+    }
+
+    const aggregationPipeline: PipelineStage[] = [
+      {
+        $match: {
+          question: questionId,
+        },
+      },
+      {
+        $addFields: {
+          upvotesLength: { $size: "$upvotes" },
+        },
+      },
+      sortQuery,
+      {
+        $lookup: {
+          from: "users", // Assuming your User model maps to 'users' collection
+          localField: "author",
+          foreignField: "_id",
+          as: "authorDetails",
+        },
+      },
+      {
+        $unwind: "$authorDetails",
+      },
+      {
+        $addFields: {
+          author: {
+            _id: "$authorDetails._id",
+            clerkId: "$authorDetails.clerkId",
+            name: "$authorDetails.name",
+            picture: "$authorDetails.picture",
+          },
+        },
+      },
+      {
+        $project: {
+          authorDetails: 0,
+        },
+      },
+    ];
+
+    const answers = await Answer.aggregate(aggregationPipeline);
 
     return { answers };
   } catch (error) {

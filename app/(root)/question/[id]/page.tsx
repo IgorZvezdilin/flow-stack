@@ -18,8 +18,9 @@ interface IPageProps {
   params: {
     [key: string]: string;
   };
+  searchParams: { [key: string]: string };
 }
-const Page = async ({ params }: IPageProps) => {
+const Page = async ({ params, searchParams }: IPageProps) => {
   const { question } = await getQuestionById({ questionId: params.id });
 
   const { userId } = auth();
@@ -107,7 +108,12 @@ const Page = async ({ params }: IPageProps) => {
         ))}
       </div>
 
-      <AnswerList questionId={question._id} userId={mongoUser._id} />
+      <AnswerList
+        questionId={question._id}
+        userId={mongoUser._id}
+        page={searchParams.page ? Number(searchParams?.page) : 1}
+        filter={searchParams?.filter}
+      />
 
       <AnswerForm
         question={question.content}

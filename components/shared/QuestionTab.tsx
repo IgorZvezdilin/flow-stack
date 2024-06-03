@@ -12,7 +12,10 @@ export default async function QuestionTab({
   userId,
   clerkId,
 }: IQuestionTab) {
-  const { questions } = await getUserQuestions({ userId });
+  const { questions } = await getUserQuestions({
+    userId,
+    page: searchParams.page ? Number(searchParams.page) : 1,
+  });
 
   return (
     <div className={"flex flex-col gap-2"}>

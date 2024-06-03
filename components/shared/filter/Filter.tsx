@@ -8,6 +8,9 @@ import {
   SelectValue,
   SelectGroup,
 } from "@/components/ui/select";
+import { formUrlQuery } from "@/lib/utils";
+import { useRouter, useSearchParams } from "next/navigation";
+import React from "react";
 
 interface IFilter {
   filters: {
@@ -23,9 +26,21 @@ export default function Filter({
   otherClasses,
   containerClasses,
 }: IFilter) {
+  const params = useSearchParams();
+  const currentFilter = params.get("filter") ?? undefined;
+  const router = useRouter();
+  const handleUpdateFilter = (value: string) => {
+    const newUrl = formUrlQuery({
+      params: params.toString(),
+      key: "filter",
+      value,
+    });
+    router.push(newUrl, { scroll: false });
+  };
+
   return (
     <div className={` relative ${containerClasses}`}>
-      <Select>
+      <Select defaultValue={currentFilter} onValueChange={handleUpdateFilter}>
         <SelectTrigger
           className={`${otherClasses} body-regular light-border background-light800_dark300 text-dark500_light700 no-focus px-5 py-2.5 outline-none`}
         >

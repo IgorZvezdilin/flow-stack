@@ -11,7 +11,7 @@ interface IAnswerList {
   questionId: string;
   userId: string;
   page?: number;
-  filter?: number;
+  filter?: string;
 }
 const AnswerList = async ({
   questionId,
@@ -19,13 +19,17 @@ const AnswerList = async ({
   page,
   filter,
 }: IAnswerList) => {
-  const { answers } = await getAllAnswers({ questionId });
+  const { answers } = await getAllAnswers({
+    questionId,
+    page: page ? +page : 1,
+    sortBy: filter,
+  });
 
   return (
     <div className={" mt-11"}>
       <div className={"flex items-center justify-between"}>
         <h3 className={"primary-text-gradient "}> {answers.length} Answers</h3>
-        <Filter filters={AnswerFilters} />
+        <Filter filters={AnswerFilters} containerClasses={" min-h-[56px]"} />
       </div>
       <div>
         {answers.map((answer) => (

@@ -8,7 +8,7 @@ import {
 import { connectToDatabase } from "@/lib/mongoose";
 import Tag, { ITag } from "@/database/tag.model";
 import Question from "@/database/question.model";
-import { FilterQuery } from "mongoose";
+import { FilterQuery, PipelineStage } from "mongoose";
 import User from "@/database/user.model";
 /*
 import User from "@/database/user.model";
@@ -35,19 +35,78 @@ export async function getTopInteractedTags(params: GetTopInteractedTagsParams) {
 
 export async function getAllTags(params: GetAllTagsParams) {
   try {
-    const { searchQuery } = params;
+    const { searchQuery, filter } = params;
 
-    const query: FilterQuery<typeof Tag> = {};
+    const query: PipelineStage[] = [];
 
     if (searchQuery) {
-      query.$or = [{ name: { $regex: new RegExp(searchQuery, "i") } }];
+      query.push({
+        $match: {
+          name: { $regex: new RegExp(searchQuery, "i") },
+        },
+      });
+    }
+    let sortQuery: PipelineStage = { $sort: {} };
+    if (filter) {
+      switch (filter) {
+        case "popular":
+          sortQuery = {
+            $sort: {
+              questionsLength: -1,
+            },
+          };
+          break;
+        case "recent":
+          sortQuery = {
+            $sort: {
+              createdOn: -1,
+            },
+          };
+          break;
+        case "name":
+          sortQuery = {
+            $sort: {
+              name: -1,
+            },
+          };
+          break;
+        case "old":
+          sortQuery = {
+            $sort: {
+              createdOn: 1,
+            },
+          };
+          break;
+        default:
+          break;
+      }
     }
 
+    const aggregationPipeline: PipelineStage[] = [
+      ...query,
+      {
+        $addFields: {
+          questionsLength: { $size: "$questions" },
+        },
+      },
+      sortQuery,
+      {
+        $lookup: {
+          from: "questions", // Assuming your Question model maps to 'questions' collection
+          localField: "questions",
+          foreignField: "_id",
+          as: "questions",
+        },
+      },
+      {
+        $project: {
+          questionsLength: 0,
+        },
+      },
+    ];
+
     await connectToDatabase();
-    const tags = await Tag.find(query).populate({
-      path: "questions",
-      model: Question,
-    });
+    const tags = await Tag.aggregate(aggregationPipeline);
     return { tags };
   } catch (error) {
     console.log(error);

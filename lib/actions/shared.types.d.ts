@@ -12,7 +12,7 @@ export interface CreateAnswerParams {
 export interface GetAnswersParams {
   questionId: string;
   sortBy?: string;
-  page?: number;
+  page: number;
   pageSize?: number;
 }
 
@@ -36,7 +36,7 @@ export interface SearchParams {
 
 export interface RecommendedParams {
   userId: string;
-  page?: number;
+  page: number;
   pageSize?: number;
   searchQuery?: string;
 }
@@ -52,7 +52,7 @@ export interface JobFilterParams {
 }
 
 export interface GetQuestionsParams {
-  page?: number;
+  page: number;
   pageSize?: number;
   searchQuery?: string;
   filter?: string;
@@ -91,7 +91,7 @@ export interface EditQuestionParams {
 }
 
 export interface GetAllTagsParams {
-  page?: number;
+  page: number;
   pageSize?: number;
   filter?: string;
   searchQuery?: string;
@@ -99,7 +99,7 @@ export interface GetAllTagsParams {
 
 export interface GetQuestionsByTagIdParams {
   tagId: string;
-  page?: number;
+  page: number;
   pageSize?: number;
   searchQuery?: string;
 }
@@ -122,7 +122,7 @@ export interface GetUserByIdParams {
 }
 
 export interface GetAllUsersParams {
-  page?: number;
+  page: number;
   pageSize?: number;
   filter?: string;
   searchQuery?: string; // Add searchQuery parameter
@@ -142,7 +142,7 @@ export interface ToggleSaveQuestionParams {
 
 export interface GetSavedQuestionsParams {
   clerkId: string;
-  page?: number;
+  page: number;
   pageSize?: number;
   filter?: string;
   searchQuery?: string;
@@ -150,7 +150,7 @@ export interface GetSavedQuestionsParams {
 
 export interface GetUserStatsParams {
   userId: string;
-  page?: number;
+  page: number;
   pageSize?: number;
 }
 

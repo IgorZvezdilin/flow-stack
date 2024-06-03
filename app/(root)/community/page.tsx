@@ -6,10 +6,13 @@ import { getAllUsers } from "@/lib/actions/user.action";
 import Link from "next/link";
 import UserCard from "@/components/shared/cards/UserCard";
 import { SearchParamsProps } from "@/types";
+import Pagination from "@/components/shared/pagination";
 
 const Page = async ({ searchParams }: SearchParamsProps) => {
-  const { users } = await getAllUsers({
+  const { users, isNext } = await getAllUsers({
     searchQuery: searchParams.q,
+    filter: searchParams.filter,
+    page: searchParams.page ? Number(searchParams.page) : 1,
   });
   return (
     <>
@@ -24,7 +27,7 @@ const Page = async ({ searchParams }: SearchParamsProps) => {
         />
         <Filter
           filters={UserFilters}
-          otherClasses="min-h-[38px] sm:min-w-[170px]"
+          otherClasses="min-h-[56px] sm:min-w-[170px]"
         />
       </div>
       <section className={"mt-12 flex flex-wrap gap-4"}>
@@ -46,6 +49,11 @@ const Page = async ({ searchParams }: SearchParamsProps) => {
           </div>
         )}
       </section>
+
+      <Pagination
+        pageNumber={searchParams.page ? Number(searchParams.page) : 1}
+        isNext={isNext}
+      />
     </>
   );
 };

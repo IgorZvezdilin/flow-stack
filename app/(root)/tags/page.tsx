@@ -10,6 +10,8 @@ import { SearchParamsProps } from "@/types";
 const Page = async ({ searchParams }: SearchParamsProps) => {
   const { tags } = await getAllTags({
     searchQuery: searchParams.q,
+    filter: searchParams.filter,
+    page: searchParams.page ? Number(searchParams.page) : 1,
   });
   return (
     <>
@@ -24,7 +26,7 @@ const Page = async ({ searchParams }: SearchParamsProps) => {
         />
         <Filter
           filters={TagFilters}
-          otherClasses="min-h-[38px] sm:min-w-[170px]"
+          otherClasses="min-h-[56px] sm:min-w-[170px]"
         />
       </div>
       <section className={"mt-12 flex flex-wrap gap-4"}>

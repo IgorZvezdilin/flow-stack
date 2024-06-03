@@ -1,6 +1,7 @@
 import { SearchParamsProps } from "@/types";
 import { getUserAnswers } from "@/lib/actions/user.action";
 import AnswerCard from "@/components/shared/cards/AnswerCard";
+import Pagination from "@/components/shared/pagination";
 
 interface IAnswerTab extends SearchParamsProps {
   userId: string;
@@ -12,7 +13,7 @@ export default async function AnswerTab({
   userId,
   clerkId,
 }: IAnswerTab) {
-  const { answers } = await getUserAnswers({
+  const { answers, isNext } = await getUserAnswers({
     userId,
     page: searchParams.page ? Number(searchParams.page) : 1,
   });
@@ -30,6 +31,10 @@ export default async function AnswerTab({
           createdAt={item.createdAt}
         />
       ))}
+      <Pagination
+        pageNumber={searchParams.page ? Number(searchParams.page) : 1}
+        isNext={isNext}
+      />
     </div>
   );
 }

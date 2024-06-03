@@ -79,7 +79,7 @@ export async function getQuestions(params: GetQuestionsParams) {
   try {
     await connectToDatabase();
 
-    const { searchQuery, filter, page = 1, pageSize = 2 } = params;
+    const { searchQuery, filter, page, pageSize = 10 } = params;
 
     const skipAmount = (page - 1) * pageSize;
 
@@ -160,7 +160,7 @@ export async function upvoteQuestion(params: QuestionVoteParams) {
     await connectToDatabase();
 
     const { questionId, userId, path, hasupVoted, hasdownVoted } = params;
-    let upvoteQuery = {};
+    let upvoteQuery;
     if (hasupVoted) {
       upvoteQuery = { $pull: { upvotes: userId } };
     } else if (hasdownVoted) {
@@ -196,7 +196,7 @@ export async function downvoteQuestion(params: QuestionVoteParams) {
     await connectToDatabase();
 
     const { questionId, userId, path, hasupVoted, hasdownVoted } = params;
-    let upvoteQuery = {};
+    let upvoteQuery;
 
     if (hasdownVoted) {
       upvoteQuery = { $pull: { downvotes: userId } };

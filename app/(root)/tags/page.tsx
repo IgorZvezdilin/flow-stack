@@ -6,9 +6,10 @@ import { getAllTags } from "@/lib/actions/tag.action";
 import NoResult from "@/components/shared/noResult/NoResult";
 import Link from "next/link";
 import { SearchParamsProps } from "@/types";
+import Pagination from "@/components/shared/pagination";
 
 const Page = async ({ searchParams }: SearchParamsProps) => {
-  const { tags } = await getAllTags({
+  const { tags, isNext } = await getAllTags({
     searchQuery: searchParams.q,
     filter: searchParams.filter,
     page: searchParams.page ? Number(searchParams.page) : 1,
@@ -71,6 +72,11 @@ const Page = async ({ searchParams }: SearchParamsProps) => {
           />
         )}
       </section>
+
+      <Pagination
+        pageNumber={searchParams.page ? Number(searchParams.page) : 1}
+        isNext={isNext}
+      />
     </>
   );
 };

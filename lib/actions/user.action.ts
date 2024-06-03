@@ -76,7 +76,7 @@ export async function deleteUser(params: DeleteUserParams) {
 export async function getAllUsers(params: GetAllUsersParams) {
   try {
     await connectToDatabase();
-    const { searchQuery, filter, page = 1, pageSize = 1 } = params;
+    const { searchQuery, filter, page = 1, pageSize = 10 } = params;
 
     const skipAmount = (page - 1) * pageSize;
 
@@ -225,7 +225,9 @@ export async function getUserInfo(params: GetUserByIdParams) {
 export async function getUserQuestions(params: GetUserStatsParams) {
   try {
     await connectToDatabase();
-    const { userId } = params;
+    const { userId, page, pageSize = 5 } = params;
+
+    const skipAmount = (page - 1) * pageSize;
 
     const totalQuestions = await Question.countDocuments({ author: userId });
     const questions = await Question.find({ author: userId })
@@ -234,9 +236,13 @@ export async function getUserQuestions(params: GetUserStatsParams) {
         upvotes: -1,
       })
       .populate("tags", "_id name")
-      .populate("author", "_id name picture clerkId");
+      .populate("author", "_id name picture clerkId")
+      .skip(skipAmount)
+      .limit(pageSize);
 
-    return { totalQuestions, questions };
+    const isNext = totalQuestions > skipAmount + questions.length;
+
+    return { totalQuestions, questions, isNext };
   } catch (error) {
     console.log(error);
     throw error;
@@ -246,7 +252,9 @@ export async function getUserQuestions(params: GetUserStatsParams) {
 export async function getUserAnswers(params: GetUserStatsParams) {
   try {
     await connectToDatabase();
-    const { userId } = params;
+    const { userId, page, pageSize = 5 } = params;
+
+    const skipAmount = (page - 1) * pageSize;
 
     const totalAnswers = await Answer.countDocuments({ author: userId });
     const answers = await Answer.find({ author: userId })
@@ -254,9 +262,13 @@ export async function getUserAnswers(params: GetUserStatsParams) {
         upvotes: -1,
       })
       .populate("question", "_id title")
-      .populate("author", "_id name picture clerkId");
+      .populate("author", "_id name picture clerkId")
+      .skip(skipAmount)
+      .limit(pageSize);
 
-    return { totalAnswers, answers };
+    const isNext = totalAnswers > skipAmount + answers.length;
+
+    return { totalAnswers, answers, isNext };
   } catch (error) {
     console.log(error);
     throw error;

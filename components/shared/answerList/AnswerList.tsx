@@ -6,11 +6,12 @@ import Image from "next/image";
 import { getTimeStamp } from "@/lib/utils";
 import ParseHTML from "@/components/shared/parseHTML/parseHTML";
 import Vote from "@/components/shared/vote/Vote";
+import Pagination from "@/components/shared/pagination";
 
 interface IAnswerList {
   questionId: string;
   userId: string;
-  page?: number;
+  page?: string;
   filter?: string;
 }
 const AnswerList = async ({
@@ -19,7 +20,7 @@ const AnswerList = async ({
   page,
   filter,
 }: IAnswerList) => {
-  const { answers } = await getAllAnswers({
+  const { answers, isNext } = await getAllAnswers({
     questionId,
     page: page ? +page : 1,
     sortBy: filter,
@@ -81,6 +82,8 @@ const AnswerList = async ({
           </article>
         ))}
       </div>
+
+      <Pagination pageNumber={page ? +page : 1} isNext={isNext} />
     </div>
   );
 };

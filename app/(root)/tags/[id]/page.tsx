@@ -4,9 +4,10 @@ import { getQuestionsByTagId } from "@/lib/actions/tag.action";
 import NoResult from "@/components/shared/noResult/NoResult";
 import QuestionCard from "@/components/shared/cards/QuestionCard";
 import { URLProps } from "@/types";
+import Pagination from "@/components/shared/pagination";
 
 const Page = async ({ params, searchParams }: URLProps) => {
-  const { name, questions } = await getQuestionsByTagId({
+  const { name, questions, isNext } = await getQuestionsByTagId({
     tagId: params.id,
     searchQuery: searchParams.q,
     page: searchParams.page ? Number(searchParams.page) : 1,
@@ -48,6 +49,10 @@ const Page = async ({ params, searchParams }: URLProps) => {
           />
         )}
       </div>
+      <Pagination
+        pageNumber={searchParams.page ? Number(searchParams.page) : 1}
+        isNext={isNext}
+      />
     </>
   );
 };

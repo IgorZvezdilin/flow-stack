@@ -111,7 +111,7 @@ const Page = async ({ params, searchParams }: IPageProps) => {
       <AnswerList
         questionId={question._id}
         userId={mongoUser._id}
-        page={searchParams.page ? Number(searchParams?.page) : 1}
+        page={searchParams?.page}
         filter={searchParams?.filter}
       />
 

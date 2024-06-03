@@ -40,7 +40,13 @@ export async function getAllAnswers(params: GetAnswersParams) {
   try {
     await connectToDatabase();
 
-    const { questionId, sortBy } = params;
+    const { questionId, sortBy, page, pageSize = 5 } = params;
+
+    const matchCriteria = {
+      question: questionId,
+    };
+
+    const skipAmount = (page - 1) * pageSize;
 
     let sortQuery: PipelineStage = { $sort: { createdAt: -1 } };
     if (sortBy) {
@@ -80,9 +86,7 @@ export async function getAllAnswers(params: GetAnswersParams) {
 
     const aggregationPipeline: PipelineStage[] = [
       {
-        $match: {
-          question: questionId,
-        },
+        $match: matchCriteria,
       },
       {
         $addFields: {
@@ -118,9 +122,15 @@ export async function getAllAnswers(params: GetAnswersParams) {
       },
     ];
 
-    const answers = await Answer.aggregate(aggregationPipeline);
+    const answers = await Answer.aggregate(aggregationPipeline)
+      .skip(skipAmount)
+      .limit(pageSize);
 
-    return { answers };
+    const totalAnswers = await Answer.countDocuments(matchCriteria);
+
+    const isNext = totalAnswers > skipAmount + answers.length;
+
+    return { answers, isNext };
   } catch (error) {
     console.log(error);
     throw error;

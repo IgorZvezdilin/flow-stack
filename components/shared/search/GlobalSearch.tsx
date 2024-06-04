@@ -3,18 +3,39 @@
 import { Input } from "@/components/ui/input";
 import Search from "@/public/assets/icons/search.svg";
 import Image from "next/image";
-import { useRouter, useSearchParams } from "next/navigation";
-import React, { useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import React, { useEffect, useRef, useState } from "react";
 import { debounce, formUrlQuery, removeKeysFromQuery } from "@/lib/utils";
 import GlobalResult from "@/components/shared/search/GlobalResult";
 
 export default function GlobalSearch() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const searchContainerRef = useRef(null);
+  const pathname = usePathname();
   const query = searchParams.get("global");
   const [search, setSearch] = useState<string>(query ?? "");
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    const handleOutsideClick = (event: any) => {
+      if (
+        searchContainerRef.current &&
+        // TODO : check contains method
+        // @ts-ignore
+        !searchContainerRef.current.contains(event.currentTarget)
+      ) {
+        setIsOpen(false);
+        setSearch("");
+      }
+    };
+
+    setIsOpen(false);
+
+    document.addEventListener("click", handleOutsideClick);
+    return () => document.removeEventListener("click", handleOutsideClick);
+  }, [pathname]);
 
   const updateQuery = debounce((value: string) => {
     if (value) {
@@ -45,7 +66,7 @@ export default function GlobalSearch() {
   };
 
   return (
-    <div className="relative w-full max-w-[600px] ">
+    <div className="relative w-full max-w-[600px]" ref={searchContainerRef}>
       <div className=" background-light800_darkgradient relative flex min-h-[56px] grow items-center gap-1 rounded-xl px-4">
         <Image
           src={Search}

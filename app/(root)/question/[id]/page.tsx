@@ -24,7 +24,7 @@ const Page = async ({ params, searchParams }: IPageProps) => {
   const { question } = await getQuestionById({ questionId: params.id });
 
   const { userId } = auth();
-  let mongoUser;
+  let mongoUser: any;
   if (userId) {
     mongoUser = await getUserById({ userId });
   }
@@ -57,10 +57,16 @@ const Page = async ({ params, searchParams }: IPageProps) => {
               itemId={JSON.stringify(question._id)}
               userId={JSON.stringify(mongoUser._id)}
               upvotes={question.upvotes.length}
-              hasUpvoted={question.upvotes.includes(mongoUser._id)}
+              hasUpvoted={question.upvotes.some(
+                (_id: any) => _id.toString() === mongoUser._id.toString(),
+              )}
               downvotes={question.downvotes.length}
-              hasDownvoted={question.downvotes.includes(mongoUser._id)}
-              hasSaved={mongoUser?.saved.includes(question._id)}
+              hasDownvoted={question.downvotes.some(
+                (_id: any) => _id.toString() === mongoUser._id.toString(),
+              )}
+              hasSaved={mongoUser.saved.some(
+                (_id: any) => _id.toString() === question._id.toString(),
+              )}
             />
           </div>
         </div>

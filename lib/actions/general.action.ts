@@ -88,7 +88,7 @@ export async function globalSearch(params: SearchParams) {
           type === "user"
             ? item.clerkId
             : type === "answer"
-              ? item.question
+              ? item.question._id
               : item._id,
       }));
     }

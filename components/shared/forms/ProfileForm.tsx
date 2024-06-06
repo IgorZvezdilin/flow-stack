@@ -57,8 +57,8 @@ const ProfileForm = ({ clerkId, profileDetails }: IProfileForm) => {
         path: pathname,
       });
       router.back();
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      console.log(error);
     } finally {
       setIsSubmitting(false);
     }

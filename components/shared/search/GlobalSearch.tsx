@@ -11,7 +11,7 @@ import GlobalResult from "@/components/shared/search/GlobalResult";
 export default function GlobalSearch() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const searchContainerRef = useRef(null);
+  const searchContainerRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const query = searchParams.get("global");
   const [search, setSearch] = useState<string>(query ?? "");
@@ -22,9 +22,7 @@ export default function GlobalSearch() {
     const handleOutsideClick = (event: any) => {
       if (
         searchContainerRef.current &&
-        // TODO : check contains method
-        // @ts-ignore
-        !searchContainerRef.current.contains(event.currentTarget)
+        !searchContainerRef.current.contains(event.target)
       ) {
         setIsOpen(false);
         setSearch("");
@@ -32,6 +30,7 @@ export default function GlobalSearch() {
     };
 
     setIsOpen(false);
+    setSearch("");
 
     document.addEventListener("click", handleOutsideClick);
     return () => document.removeEventListener("click", handleOutsideClick);
@@ -59,7 +58,6 @@ export default function GlobalSearch() {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!isOpen) setIsOpen(true);
-    console.log(event.currentTarget.value);
     if (event.currentTarget.value === "" && isOpen) setIsOpen(false);
     setSearch(event.currentTarget.value);
     updateQuery(event.currentTarget.value);

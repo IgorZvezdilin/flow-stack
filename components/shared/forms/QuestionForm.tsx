@@ -72,8 +72,8 @@ const QuestionForm = ({
         });
         router.push("/");
       }
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      console.log(error);
     } finally {
       setIsSubmitting(false);
     }

@@ -62,7 +62,6 @@ const Vote = ({
           });
         }
         if (type === "Answer") {
-          console.log(hasUpvoted);
           await upvoteAnswer({
             userId: JSON.parse(userId),
             answerId: JSON.parse(itemId),

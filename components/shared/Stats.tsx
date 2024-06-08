@@ -3,10 +3,13 @@ import GoldMedal from "@/public/assets/icons/gold-medal.svg";
 import SilverMedal from "@/public/assets/icons/silver-medal.svg";
 import BronzeMedal from "@/public/assets/icons/bronze-medal.svg";
 import Image from "next/image";
+import { BadgeCounts } from "@/types";
 
 interface IStats {
   totalQuestions: number;
   totalAnswers: number;
+  badgeCounts: BadgeCounts;
+  reputation: number;
 }
 
 interface IStatsCard {
@@ -36,10 +39,17 @@ const StatsCard = ({ imgUrl, value, title }: IStatsCard) => {
     </div>
   );
 };
-export default function Stats({ totalQuestions, totalAnswers }: IStats) {
+export default function Stats({
+  totalQuestions,
+  totalAnswers,
+  badgeCounts,
+  reputation,
+}: IStats) {
   return (
     <div className={"mt-10"}>
-      <h4 className={"h3-semibold text-dark200_light900"}>Stats</h4>
+      <h4 className={"h3-semibold text-dark200_light900"}>
+        Stats - {reputation}
+      </h4>
       <div
         className={"mt-5 grid grid-cols-1 gap-5 xs:grid-cols-2 md:grid-cols-4"}
       >
@@ -57,9 +67,21 @@ export default function Stats({ totalQuestions, totalAnswers }: IStats) {
             <p className={"body-medium text-dark400_light700"}>Answers</p>
           </div>
         </div>
-        <StatsCard imgUrl={GoldMedal} value={0} title={"Gold Badges"} />
-        <StatsCard imgUrl={SilverMedal} value={0} title={"Silver Badges"} />
-        <StatsCard imgUrl={BronzeMedal} value={0} title={"Bronze Badges"} />
+        <StatsCard
+          imgUrl={GoldMedal}
+          value={badgeCounts.GOLD}
+          title={"Gold Badges"}
+        />
+        <StatsCard
+          imgUrl={SilverMedal}
+          value={badgeCounts.SILVER}
+          title={"Silver Badges"}
+        />
+        <StatsCard
+          imgUrl={BronzeMedal}
+          value={badgeCounts.BRONZE}
+          title={"Bronze Badges"}
+        />
       </div>
     </div>
   );

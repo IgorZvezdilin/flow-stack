@@ -29,6 +29,7 @@ const AnswerForm = ({ question, questionId, userId }: IAnswerForm) => {
   const { mode } = useTheme();
   const pathName = usePathname();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  // const [isSubmittingAI, setIsSubmittingAI] = useState<boolean>(false);
   const editorRef = useRef(null);
   const form = useForm<z.infer<typeof AnswerSchema>>({
     resolver: zodResolver(AnswerSchema),
@@ -59,7 +60,25 @@ const AnswerForm = ({ question, questionId, userId }: IAnswerForm) => {
     }
   };
 
-  const handleCreateAIAnswer = () => {};
+  const handleCreateAIAnswer = async () => {
+    if (!userId) return;
+    // setIsSubmittingAI(true);
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/chatgpt`,
+        {
+          method: "POST",
+          body: JSON.stringify(question),
+        },
+      );
+      const aiAnswer = await response.json();
+      alert(aiAnswer.reply);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      // setIsSubmittingAI(false);
+    }
+  };
 
   return (
     <div>

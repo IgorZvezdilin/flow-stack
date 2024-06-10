@@ -4,7 +4,6 @@ import System from "@/public/assets/icons/computer.svg";
 import Home from "@/public/assets/icons/home.svg";
 import Community from "@/public/assets/icons/users.svg";
 import Collections from "@/public/assets/icons/star.svg";
-import FindJobs from "@/public/assets/icons/suitcase.svg";
 import Tags from "@/public/assets/icons/tag.svg";
 import Profile from "@/public/assets/icons/user.svg";
 import AskQuestion from "@/public/assets/icons/question.svg";
@@ -30,11 +29,6 @@ export const sideBarLinks = [
     imgURL: Collections,
     route: "/collection",
     label: "Collections",
-  },
-  {
-    imgURL: FindJobs,
-    route: "/jobs",
-    label: "Find Jobs",
   },
   {
     imgURL: Tags,

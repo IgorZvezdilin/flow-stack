@@ -24,7 +24,10 @@ const Page = async ({ params, searchParams }: IPageProps) => {
   const { question } = await getQuestionById({ questionId: params.id });
 
   const { userId } = auth();
-  let mongoUser: any;
+  let mongoUser = {
+    _id: "",
+    saved: [],
+  };
   if (userId) {
     mongoUser = await getUserById({ userId });
   }
@@ -55,16 +58,16 @@ const Page = async ({ params, searchParams }: IPageProps) => {
             <Vote
               type={"Question"}
               itemId={JSON.stringify(question._id)}
-              userId={JSON.stringify(mongoUser._id)}
+              userId={JSON.stringify(mongoUser?._id) || ""}
               upvotes={question.upvotes.length}
               hasUpvoted={question.upvotes.some(
-                (_id: any) => _id.toString() === mongoUser._id.toString(),
+                (_id: any) => _id.toString() === mongoUser?._id.toString(),
               )}
               downvotes={question.downvotes.length}
               hasDownvoted={question.downvotes.some(
-                (_id: any) => _id.toString() === mongoUser._id.toString(),
+                (_id: any) => _id.toString() === mongoUser?._id.toString(),
               )}
-              hasSaved={mongoUser.saved.some(
+              hasSaved={mongoUser?.saved.some(
                 (_id: any) => _id.toString() === question._id.toString(),
               )}
             />
@@ -116,7 +119,7 @@ const Page = async ({ params, searchParams }: IPageProps) => {
 
       <AnswerList
         questionId={question._id}
-        userId={mongoUser._id}
+        userId={mongoUser?._id}
         page={searchParams?.page}
         filter={searchParams?.filter}
       />
@@ -124,7 +127,7 @@ const Page = async ({ params, searchParams }: IPageProps) => {
       <AnswerForm
         question={question.content}
         questionId={JSON.stringify(question._id)}
-        userId={JSON.stringify(mongoUser._id)}
+        userId={JSON.stringify(mongoUser?._id)}
       />
     </>
   );

@@ -12,7 +12,7 @@ import {
   downvoteQuestion,
   upvoteQuestion,
 } from "@/lib/actions/question.action";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { downvoteAnswer, upvoteAnswer } from "@/lib/actions/answer.action";
 import { toggleSaveQuestion } from "@/lib/actions/user.action";
 import { useEffect } from "react";
@@ -39,18 +39,21 @@ const Vote = ({
   hasSaved,
 }: IVote) => {
   const pathName = usePathname();
+  const router = useRouter();
   const handleSave = async () => {
-    if (userId) {
+    if (JSON.parse(userId)) {
       await toggleSaveQuestion({
         userId: JSON.parse(userId),
         questionId: JSON.parse(itemId),
         path: pathName,
       });
+    } else {
+      router.push("/sign-in");
     }
   };
 
   const handleVote = async (action: "upvote" | "downvote") => {
-    if (userId) {
+    if (JSON.parse(userId)) {
       if (action === "upvote") {
         if (type === "Question") {
           await upvoteQuestion({
@@ -91,6 +94,8 @@ const Vote = ({
           });
         }
       }
+    } else {
+      router.push("/sign-in");
     }
 
     // TODO show toast

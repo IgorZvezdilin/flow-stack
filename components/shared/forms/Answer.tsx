@@ -18,7 +18,7 @@ import { useTheme } from "@/context/ThemeProvider";
 import Image from "next/image";
 import Shrink from "../../../public/assets/icons/stars.svg";
 import { createAnswer } from "@/lib/actions/answer.action";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 interface IAnswerForm {
   question: string;
@@ -28,8 +28,9 @@ interface IAnswerForm {
 const AnswerForm = ({ question, questionId, userId }: IAnswerForm) => {
   const { mode } = useTheme();
   const pathName = usePathname();
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  // const [isSubmittingAI, setIsSubmittingAI] = useState<boolean>(false);
+  const [isSubmittingAI, setIsSubmittingAI] = useState<boolean>(false);
   const editorRef = useRef(null);
   const form = useForm<z.infer<typeof AnswerSchema>>({
     resolver: zodResolver(AnswerSchema),
@@ -39,44 +40,54 @@ const AnswerForm = ({ question, questionId, userId }: IAnswerForm) => {
   });
 
   const handleCreateAnswer = async (values: z.infer<typeof AnswerSchema>) => {
-    setIsSubmitting(true);
-    try {
-      await createAnswer({
-        author: JSON.parse(userId),
-        question: JSON.parse(questionId),
-        content: values.answer,
-        path: pathName,
-      });
+    if (JSON.parse(userId)) {
+      setIsSubmitting(true);
+      try {
+        await createAnswer({
+          author: JSON.parse(userId),
+          question: JSON.parse(questionId),
+          content: values.answer,
+          path: pathName,
+        });
 
-      form.reset();
-      if (editorRef.current) {
-        const editor = editorRef.current as any;
-        editor.setContent("");
+        form.reset();
+        if (editorRef.current) {
+          const editor = editorRef.current as any;
+          editor.setContent("");
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsSubmitting(false);
       }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsSubmitting(false);
+    } else {
+      router.push("/sign-in");
     }
   };
 
   const handleCreateAIAnswer = async () => {
     if (!userId) return;
-    // setIsSubmittingAI(true);
+    setIsSubmittingAI(true);
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/chatgpt`,
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/yagpt`,
         {
           method: "POST",
           body: JSON.stringify(question),
         },
       );
       const aiAnswer = await response.json();
-      alert(aiAnswer.reply);
+      const formattedAnswer = aiAnswer.reply.replace(/\n/g, "<br />");
+
+      if (editorRef.current) {
+        const editor = editorRef.current as any;
+        editor.setContent(formattedAnswer);
+      }
+      // TOAST
     } catch (error) {
       console.log(error);
     } finally {
-      // setIsSubmittingAI(false);
+      setIsSubmittingAI(false);
     }
   };
 
@@ -94,6 +105,7 @@ const AnswerForm = ({ question, questionId, userId }: IAnswerForm) => {
           className={
             "btn light-border-2 gap-1.5 rounded-md px-4 py-2.5 text-primary-500 shadow-none dark:text-primary-500 "
           }
+          disabled={isSubmittingAI || !JSON.parse(userId)}
           onClick={handleCreateAIAnswer}
         >
           <Image
@@ -103,7 +115,7 @@ const AnswerForm = ({ question, questionId, userId }: IAnswerForm) => {
             height={12}
             className={"object-contain"}
           />
-          Generate an AI answer
+          {isSubmittingAI ? "Generating..." : "Generate an AI answer"}
         </Button>
       </div>
       <Form {...form}>
@@ -164,8 +176,10 @@ const AnswerForm = ({ question, questionId, userId }: IAnswerForm) => {
           <div className={"flex justify-end"}>
             <Button
               type="submit"
-              className={"primary-gradient w-fit text-white"}
-              disabled={isSubmitting}
+              className={
+                "primary-gradient w-fit text-white hover:cursor-pointer hover:disabled:cursor-not-allowed"
+              }
+              disabled={isSubmitting || !JSON.parse(userId)}
             >
               {isSubmitting ? "Submitting..." : "Submit"}
             </Button>

@@ -22,7 +22,7 @@ const UserCard = async ({ user }: IUser) => {
       }
     >
       <Link
-        href={`/users/${user.clerkId}`}
+        href={`/profile/${user.clerkId}`}
         className={"shadow-light100_darknone flex w-full flex-col items-center"}
       >
         <Image

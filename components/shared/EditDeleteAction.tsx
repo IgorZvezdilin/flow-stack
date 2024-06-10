@@ -6,6 +6,7 @@ import Delete from "@/public/assets/icons/trash.svg";
 import { deleteQuestion } from "@/lib/actions/question.action";
 import { usePathname, useRouter } from "next/navigation";
 import { deleteAnswer } from "@/lib/actions/answer.action";
+import { toast } from "@/components/ui/use-toast";
 
 interface IEditDeleteAction {
   type: string;
@@ -20,9 +21,15 @@ export default function EditDeleteAction({ type, itemId }: IEditDeleteAction) {
   const handleDelete = async () => {
     if (type === "Question") {
       await deleteQuestion({ questionId: JSON.parse(itemId), path: pathName });
+      toast({
+        description: "Question successfully deleted",
+      });
     }
     if (type === "Answer") {
       await deleteAnswer({ answerId: JSON.parse(itemId), path: pathName });
+      toast({
+        description: "Answer successfully deleted",
+      });
     }
   };
 

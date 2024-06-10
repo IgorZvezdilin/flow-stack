@@ -22,6 +22,7 @@ import Image from "next/image";
 import { createQuestion, editQuestion } from "@/lib/actions/question.action";
 import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "@/context/ThemeProvider";
+import { toast } from "@/components/ui/use-toast";
 
 interface IQuestionForm {
   mongoUserId: string;
@@ -61,6 +62,9 @@ const QuestionForm = ({
           content: values.explanation,
           path: pathname,
         });
+        toast({
+          description: "Question successfully edited",
+        });
         router.push(`/question/${parsedQuestion._id}`);
       } else {
         await createQuestion({
@@ -70,10 +74,16 @@ const QuestionForm = ({
           author: JSON.parse(mongoUserId),
           path: pathname,
         });
+        toast({
+          description: "Question successfully created",
+        });
         router.push("/");
       }
     } catch (error) {
-      console.log(error);
+      toast({
+        title: "Ooops...",
+        description: "Something went wrong. Please try again later",
+      });
     } finally {
       setIsSubmitting(false);
     }

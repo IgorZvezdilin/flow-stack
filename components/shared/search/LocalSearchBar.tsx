@@ -69,7 +69,7 @@ export default function LocalSearchBar({
         value={search}
         placeholder={placeholder}
         onChange={handleChange}
-        className=" paragraf-regular no-focus placeholder background-light800_darkgradient border-none shadow-none outline-none "
+        className=" paragraf-regular no-focus placeholder text-dark400_light700 border-none bg-transparent shadow-none outline-none "
       />
       {iconPosition === "right" && (
         <Image

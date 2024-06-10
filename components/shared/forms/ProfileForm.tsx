@@ -18,6 +18,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ProfileSchema } from "@/lib/validations";
 import { usePathname, useRouter } from "next/navigation";
 import { updateUser } from "@/lib/actions/user.action";
+import { toast } from "@/components/ui/use-toast";
 
 interface IProfileForm {
   clerkId: string;
@@ -56,9 +57,15 @@ const ProfileForm = ({ clerkId, profileDetails }: IProfileForm) => {
         },
         path: pathname,
       });
+      toast({
+        description: "User successfully updated",
+      });
       router.back();
     } catch (error) {
-      console.log(error);
+      toast({
+        title: "Ooops...",
+        description: "Something went wrong. Please try again later",
+      });
     } finally {
       setIsSubmitting(false);
     }

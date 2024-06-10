@@ -5,7 +5,11 @@ import NoResult from "@/components/shared/noResult/NoResult";
 import QuestionCard from "@/components/shared/cards/QuestionCard";
 import { URLProps } from "@/types";
 import Pagination from "@/components/shared/pagination";
+import type { Metadata } from "next";
 
+export const metadata: Metadata = {
+  title: "Tag | Dev overflow",
+};
 const Page = async ({ params, searchParams }: URLProps) => {
   const { name, questions, isNext } = await getQuestionsByTagId({
     tagId: params.id,

@@ -14,6 +14,11 @@ import { getUserById } from "@/lib/actions/user.action";
 import AnswerList from "@/components/shared/answerList/AnswerList";
 import Vote from "@/components/shared/vote/Vote";
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Question | Dev overflow",
+};
 interface IPageProps {
   params: {
     [key: string]: string;

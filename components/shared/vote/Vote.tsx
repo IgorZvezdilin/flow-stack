@@ -12,11 +12,12 @@ import {
   downvoteQuestion,
   upvoteQuestion,
 } from "@/lib/actions/question.action";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { downvoteAnswer, upvoteAnswer } from "@/lib/actions/answer.action";
 import { toggleSaveQuestion } from "@/lib/actions/user.action";
 import { useEffect } from "react";
 import { viewQuestion } from "@/lib/actions/interaction.action";
+import { toast } from "@/components/ui/use-toast";
 
 interface IVote {
   type: string;
@@ -39,7 +40,6 @@ const Vote = ({
   hasSaved,
 }: IVote) => {
   const pathName = usePathname();
-  const router = useRouter();
   const handleSave = async () => {
     if (JSON.parse(userId)) {
       await toggleSaveQuestion({
@@ -47,8 +47,15 @@ const Vote = ({
         questionId: JSON.parse(itemId),
         path: pathName,
       });
+      toast({
+        title: `Save question ${!hasSaved ? "successfully" : "removed"} `,
+        variant: !hasSaved ? "default" : "destructive",
+      });
     } else {
-      router.push("/sign-in");
+      toast({
+        title: "Please log in.",
+        description: "You must be logged in to perform this action",
+      });
     }
   };
 
@@ -73,6 +80,10 @@ const Vote = ({
             path: pathName,
           });
         }
+        toast({
+          title: `Upvote ${!hasUpvoted ? "successfully" : "removed"} `,
+          variant: !hasUpvoted ? "default" : "destructive",
+        });
       }
       if (action === "downvote") {
         if (type === "Question") {
@@ -93,12 +104,17 @@ const Vote = ({
             path: pathName,
           });
         }
+        toast({
+          title: `Downvote ${!hasDownvoted ? "successfully" : "removed"} `,
+          variant: !hasDownvoted ? "default" : "destructive",
+        });
       }
     } else {
-      router.push("/sign-in");
+      toast({
+        title: "Please log in.",
+        description: "You must be logged in to perform this action",
+      });
     }
-
-    // TODO show toast
   };
 
   useEffect(() => {

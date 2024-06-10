@@ -78,7 +78,7 @@ export default function GlobalSearch() {
           value={search}
           onChange={handleChange}
           placeholder="Search globally"
-          className="paragraf-regular text-dark400_light800 no-focus placeholder background-light800_darkgradient ouline-none border-none shadow-none "
+          className="paragraf-regular text-dark400_light800 no-focus placeholder ouline-none border-none bg-transparent shadow-none "
         />
       </div>
       {isOpen && <GlobalResult />}

@@ -2,6 +2,7 @@ import LeftSideBar from "@/components/shared/leftSideBar/LeftSideBar";
 import Navbar from "@/components/shared/navbar/Navbar";
 import RightSideBar from "@/components/shared/rightSideBar/RightSideBar";
 import React from "react";
+import { Toaster } from "@/components/ui/toaster";
 
 export default function RootLayout({
   children,
@@ -23,7 +24,7 @@ export default function RootLayout({
           " z-90 absolute bottom-0 shadow-light-300 max-sm:hidden lg:w-[266px] dark:shadow-none"
         }
       >
-        Toaster
+        <Toaster />
       </div>
     </main>
   );

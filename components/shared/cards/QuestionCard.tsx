@@ -76,7 +76,7 @@ export default function QuestionCard({
           textStyles=" small-medium text-dark400_light700"
           isAuthor
         />
-        <div className=" flex flex-row gap-3">
+        <div className=" flex flex-row items-center gap-3 max-sm:flex-wrap max-sm:justify-start">
           <Metric
             imgUrl={Like}
             alt="upotes"

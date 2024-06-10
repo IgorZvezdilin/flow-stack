@@ -18,7 +18,8 @@ import { useTheme } from "@/context/ThemeProvider";
 import Image from "next/image";
 import Shrink from "../../../public/assets/icons/stars.svg";
 import { createAnswer } from "@/lib/actions/answer.action";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import { toast } from "@/components/ui/use-toast";
 
 interface IAnswerForm {
   question: string;
@@ -28,7 +29,6 @@ interface IAnswerForm {
 const AnswerForm = ({ question, questionId, userId }: IAnswerForm) => {
   const { mode } = useTheme();
   const pathName = usePathname();
-  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isSubmittingAI, setIsSubmittingAI] = useState<boolean>(false);
   const editorRef = useRef(null);
@@ -55,18 +55,32 @@ const AnswerForm = ({ question, questionId, userId }: IAnswerForm) => {
           const editor = editorRef.current as any;
           editor.setContent("");
         }
+        toast({
+          description: "Answer successfully created",
+        });
       } catch (error) {
         console.log(error);
+        toast({
+          title: "Ooops...",
+          description: "Something went wrong. Please try again later",
+        });
       } finally {
         setIsSubmitting(false);
       }
     } else {
-      router.push("/sign-in");
+      toast({
+        title: "Please log in.",
+        description: "You must be logged in to perform this action",
+      });
     }
   };
 
   const handleCreateAIAnswer = async () => {
-    if (!userId) return;
+    if (!userId)
+      return toast({
+        title: "Please log in.",
+        description: "You must be logged in to perform this action",
+      });
     setIsSubmittingAI(true);
     try {
       const response = await fetch(
@@ -83,9 +97,14 @@ const AnswerForm = ({ question, questionId, userId }: IAnswerForm) => {
         const editor = editorRef.current as any;
         editor.setContent(formattedAnswer);
       }
-      // TOAST
+      toast({
+        description: "AI successfully generate answer. Check editor window.",
+      });
     } catch (error) {
-      console.log(error);
+      toast({
+        title: "Ooops...",
+        description: "Something went wrong. Please try again later",
+      });
     } finally {
       setIsSubmittingAI(false);
     }

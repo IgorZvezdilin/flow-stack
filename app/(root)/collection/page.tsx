@@ -7,7 +7,11 @@ import QuestionCard from "@/components/shared/cards/QuestionCard";
 import { getSavedQuestions } from "@/lib/actions/user.action";
 import { auth } from "@clerk/nextjs";
 import { SearchParamsProps } from "@/types";
+import type { Metadata } from "next";
 
+export const metadata: Metadata = {
+  title: "Collection | Dev overflow",
+};
 export default async function Collection({ searchParams }: SearchParamsProps) {
   const { userId } = auth();
   let questions;

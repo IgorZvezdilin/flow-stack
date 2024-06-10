@@ -14,6 +14,11 @@ import Stats from "@/components/shared/Stats";
 import QuestionTab from "@/components/shared/QuestionTab";
 import AnswerTab from "@/components/shared/AnswerTab";
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Profile | Dev overflow",
+};
 export default async function Page({ params, searchParams }: URLProps) {
   const { userId: clerkId } = auth();
   const { user, totalQuestions, totalAnswers, badgeCounts } = await getUserInfo(

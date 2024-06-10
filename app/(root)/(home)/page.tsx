@@ -7,16 +7,43 @@ import { HomePageFilters } from "@/constants/filters";
 import HomeFilter from "@/components/shared/filter/HomeFilter";
 import NoResult from "@/components/shared/noResult/NoResult";
 import QuestionCard from "@/components/shared/cards/QuestionCard";
-import { getQuestions } from "@/lib/actions/question.action";
+import {
+  getQuestions,
+  getRecommendedQuestions,
+} from "@/lib/actions/question.action";
 import { SearchParamsProps } from "@/types";
 import Pagination from "@/components/shared/pagination";
+import type { Metadata } from "next";
+import { auth } from "@clerk/nextjs";
+
+export const metadata: Metadata = {
+  title: "Home | Dev overflow",
+};
 
 export default async function Home({ searchParams }: SearchParamsProps) {
-  const { questions, isNext } = await getQuestions({
-    searchQuery: searchParams.q,
-    filter: searchParams.filter,
-    page: searchParams.page ? Number(searchParams.page) : 1,
-  });
+  let result;
+
+  const { userId } = auth();
+  if (searchParams.filter === "recommended") {
+    if (userId) {
+      result = await getRecommendedQuestions({
+        searchQuery: searchParams.q,
+        userId,
+        page: searchParams.page ? Number(searchParams.page) : 1,
+      });
+    } else {
+      result = {
+        questions: [],
+        isNext: false,
+      };
+    }
+  } else {
+    result = await getQuestions({
+      searchQuery: searchParams.q,
+      filter: searchParams.filter,
+      page: searchParams.page ? Number(searchParams.page) : 1,
+    });
+  }
 
   return (
     <>
@@ -45,8 +72,8 @@ export default async function Home({ searchParams }: SearchParamsProps) {
       <HomeFilter />
 
       <div className=" mt-10 flex w-full flex-col gap-6 ">
-        {questions.length > 0 ? (
-          questions.map((question) => (
+        {result.questions.length > 0 ? (
+          result.questions.map((question) => (
             <QuestionCard
               key={question._id}
               _id={question._id}
@@ -72,7 +99,7 @@ export default async function Home({ searchParams }: SearchParamsProps) {
       </div>
       <Pagination
         pageNumber={searchParams.page ? Number(searchParams.page) : 1}
-        isNext={isNext}
+        isNext={result.isNext}
       />
     </>
   );

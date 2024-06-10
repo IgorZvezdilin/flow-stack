@@ -33,7 +33,7 @@ const StatsCard = ({ imgUrl, value, title }: IStatsCard) => {
         className={""}
       />
       <div>
-        <p>{value}</p>
+        <p className={"body-medium text-dark400_light700"}>{value}</p>
         <p className={"body-medium text-dark400_light700"}>{title}</p>
       </div>
     </div>

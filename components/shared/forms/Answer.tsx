@@ -91,9 +91,11 @@ const AnswerForm = ({ question, questionId, userId }: IAnswerForm) => {
         },
       );
       const aiAnswer = await response.json();
+      console.log("aiAnswer", aiAnswer);
       const formattedAnswer = aiAnswer.reply.replace(/\n/g, "<br />");
 
       if (editorRef.current) {
+        console.log("here!");
         const editor = editorRef.current as any;
         editor.setContent(formattedAnswer);
       }

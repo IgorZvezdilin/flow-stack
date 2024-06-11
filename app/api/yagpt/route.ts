@@ -43,7 +43,6 @@ export async function POST(request: Request) {
       },
     );
     const data = await response.json();
-    console.log("data", data);
     if ("error" in data && data.error.message)
       throw new Error(data.error.message);
     const reply = data.result.alternatives[0].message.text;
